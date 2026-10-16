@@ -1,0 +1,13 @@
+# Local data and backups
+*.json.backup
+backups/
+*.log
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
