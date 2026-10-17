@@ -40,10 +40,11 @@ jobs:
           new Function(source);
           console.log('GridOps module JavaScript syntax is valid.');
           NODE
+      # GitHub Pages must be enabled once in Repository Settings → Pages.
+      # Do not attempt to enable it from this workflow: the default GITHUB_TOKEN
+      # may not have repository administration permission to create the Pages site.
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Upload static site
         uses: actions/upload-pages-artifact@v4
         with:
