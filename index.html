@@ -65,7 +65,7 @@ window.gridManageSubstations=async()=>{
   try{
    if(db&&user)await deleteDoc(doc(db,"gridops_substations",x.id));
    substations=substations.filter(a=>a.id!==x.id);saveSubstations();
-   if(state.session.substationId===x.id){state.session.substationId=substations[0].id;state.session.substationName=substations[0].name;state.ptrs=[];state.relays=[];state.faults=[];state.feeders=[];state.customColumns={ptrs:[],relays:[],faults:[],feeders:[]};saveLocal();substationSelected=false}
+   if(state.session.substationId===x.id){state.session.substationId=substations[0].id;state.session.substationName=substations[0].name;state.ptrs=[];state.relays=[];state.faults=[];state.feeders=[];state.issues=[];state.customColumns={ptrs:[],relays:[],faults:[],feeders:[]};saveLocal();substationSelected=false}
    msg="Substation removed from this browser list"+(db&&user?"; cloud document deleted.":"; cloud data was not deleted because Firebase is not connected.");render();
   }catch(e){msg="Cloud deletion failed (possibly blocked by Firestore rules): "+e.message;render()}
   return;
@@ -89,7 +89,7 @@ window.gridSwitchSubstation=async id=>{
   },e=>{dbStatus="error";dbError=e.message;msg="Unable to access this substation: "+e.message;render()});
  }
  render();
-};window.gridIssueAdd=async e=>{e.preventDefault();let f=e.target;state.issues.unshift({id:"ISS-"+Date.now().toString(36).toUpperCase(),title:f.title.value.trim(),category:f.category.value,priority:f.priority.value,reportedBy:f.reportedBy.value.trim(),description:f.description.value.trim(),status:"Open",resolutionNotes:"",createdAt:time(),updatedAt:time(),resolvedAt:""});msg="Issue recorded.";issueFilter="";await persist()};
+};window.gridIssueAdd=async e=>{e.preventDefault();let f=e.target;state.issues.unshift({id:"ISS-"+Date.now().toString(36).toUpperCase(),title:f.elements.title.value.trim(),category:f.elements.category.value,priority:f.elements.priority.value,reportedBy:f.elements.reportedBy.value.trim(),description:f.elements.description.value.trim(),status:"Open",resolutionNotes:"",createdAt:time(),updatedAt:time(),resolvedAt:""});msg="Issue recorded.";issueFilter="";await persist()};
 window.gridIssueToggle=async id=>{let x=state.issues.find(a=>a.id===id);if(!x)return;if(x.status==="Resolved"){x.status="Open";x.resolvedAt="";x.updatedAt=time();msg="Issue reopened."}else{let notes=prompt("Resolution notes (optional):",x.resolutionNotes||"");if(notes===null)return;x.status="Resolved";x.resolutionNotes=notes.trim();x.resolvedAt=time();x.updatedAt=time();msg="Issue marked resolved."}await persist()};
 window.gridIssueNotes=async id=>{let x=state.issues.find(a=>a.id===id);if(!x)return;let notes=prompt("Update issue / resolution notes:",x.resolutionNotes||"");if(notes===null)return;let description=prompt("Update issue details:",x.description||"");if(description===null)return;x.resolutionNotes=notes.trim();x.description=description.trim();x.updatedAt=time();msg="Issue updated.";await persist()};
 window.gridIssueDelete=async id=>{let x=state.issues.find(a=>a.id===id);if(!x||!confirm("Delete issue: "+x.title+"?"))return;state.issues=state.issues.filter(a=>a.id!==id);msg="Issue deleted.";await persist()};
