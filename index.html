@@ -136,11 +136,14 @@ window.gridManageSubstations=async()=>{
  action=action.toUpperCase();
  if(action==="ADD"){
   let name=prompt("New substation name");if(!name||!name.trim())return;
-  let suggested=name.trim().toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
+  name=name.trim();
+  const normalizedName=v=>String(v||"").trim().replace(/\\s+/g," ").toLocaleLowerCase();
+  if(substations.some(x=>normalizedName(x.name)===normalizedName(name)))return alert("A substation with this name already exists. Please enter a unique name.");
+  let suggested=name.toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"");
   let id=prompt("Firestore document ID (letters, numbers, underscore, hyphen)",suggested);
   if(!id||!/^[A-Za-z0-9_-]+$/.test(id))return alert("Invalid document ID.");
   if(substations.some(x=>x.id===id))return alert("That document ID already exists.");
-  substations.push({id,name:name.trim()});saveSubstations();if(db&&user){try{await setDoc(doc(db,"gridops_substations",id),{substationName:name.trim(),ptrCount:0,customColumns:{ptrs:[],relays:[],faults:[],feeders:[]},ptrs:[],relays:[],faults:[],feeders:[],issues:[],sld:[],sldConnections:[],auditLog:[],createdAtIst:time(),createdBy:user.email||user.uid},{merge:true});msg="Substation added and shared through Firebase.";dbStatus="connected";dbError=""}catch(e){msg="Added to this browser, but cloud sharing failed: "+e.message;dbStatus="error";dbError=e.message}}else{msg="Substation added locally. Sign in to Firebase to share it across browsers."}render();return;
+  substations.push({id,name});saveSubstations();if(db&&user){try{await setDoc(doc(db,"gridops_substations",id),{substationName:name,ptrCount:0,customColumns:{ptrs:[],relays:[],faults:[],feeders:[]},ptrs:[],relays:[],faults:[],feeders:[],issues:[],sld:[],sldConnections:[],auditLog:[],createdAtIst:time(),createdBy:user.email||user.uid},{merge:true});msg="Substation added and shared through Firebase.";dbStatus="connected";dbError=""}catch(e){msg="Added to this browser, but cloud sharing failed: "+e.message;dbStatus="error";dbError=e.message}}else{msg="Substation added locally. Sign in to Firebase to share it across browsers."}render();return;
  }
  alert("Saved substations:\n"+substations.map((x,i)=>(i+1)+". "+x.name+" ["+x.id+"]").join("\n"));
  let choice=Number(prompt("Enter substation number to "+(action==="EDIT"?"edit":action==="DELETE"?"delete":"manage")));
@@ -148,6 +151,9 @@ window.gridManageSubstations=async()=>{
  let x=substations[choice-1];
  if(action==="EDIT"){
   let name=prompt("Substation name",x.name);if(!name||!name.trim())return;
+  name=name.trim();
+  const normalizedName=v=>String(v||"").trim().replace(/\\s+/g," ").toLocaleLowerCase();
+  if(substations.some(a=>a.id!==x.id&&normalizedName(a.name)===normalizedName(name)))return alert("A substation with this name already exists. Please enter a unique name.");
   let id=prompt("Document ID",x.id);if(!id||!/^[A-Za-z0-9_-]+$/.test(id))return alert("Invalid document ID.");
   if(id!==x.id&&substations.some(a=>a.id===id))return alert("That document ID already exists.");
   let oldId=x.id;x.name=name.trim();x.id=id;
