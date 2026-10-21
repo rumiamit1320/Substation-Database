@@ -3,9 +3,9 @@
 <style>
 :root{color-scheme:dark}
 *{box-sizing:border-box}
-html,body{width:100%;max-width:100%;margin:0;overflow-x:auto}
+html,body{width:100%;max-width:100%;min-height:100%;margin:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
 body{background:#080d18;color:#e5edf8;font-family:Inter,system-ui,sans-serif}
-#app{width:100%;max-width:100%;min-width:0;overflow-x:visible}
+#app{display:block!important;width:100%;max-width:100%;min-width:0;min-height:100vh;overflow:visible}
 ::-webkit-scrollbar{width:7px;height:7px}
 ::-webkit-scrollbar-thumb{background:#334155;border-radius:8px}
 .panel{min-width:0;background:linear-gradient(145deg,#111b2e,#0c1322);border:1px solid #233149;border-radius:16px}
@@ -29,11 +29,14 @@ tbody tr:hover{background:#ffffff05}
 img,svg,canvas{max-width:100%}
 input,select,textarea,button{font:inherit}
 @media(max-width:800px){
-  #layout{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;max-width:100%!important}
+  html,body{height:auto!important;min-height:100%;overflow-y:auto!important;overflow-x:hidden!important;touch-action:pan-y}
+  #app{height:auto!important;min-height:100dvh;overflow:visible!important}
+  #layout{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;min-height:100dvh;height:auto!important;min-width:0!important;max-width:100%!important;overflow:visible!important}
   #side{position:sticky;top:0;z-index:30;display:flex;flex-direction:column;width:100%!important;min-width:0!important;max-width:100%!important;padding:10px!important;gap:10px!important;background:#0b1220f5;backdrop-filter:blur(12px);border-bottom:1px solid #233149}
   #nav{display:flex;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:6px!important;padding-bottom:4px;max-width:100%;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
   #nav .navbtn{flex:0 0 auto;width:auto;min-height:42px;white-space:nowrap;padding:9px 11px;font-size:12px}
-  #main{display:block;width:100%!important;min-width:0!important;max-width:100%!important;margin-left:0!important;padding:14px!important;overflow-x:visible}
+  #main{display:block;width:100%!important;min-width:0!important;max-width:100%!important;margin-left:0!important;padding:14px!important;overflow:visible!important;flex:1 0 auto}
+  #main>header{position:relative!important;top:auto!important}
   #main>*{min-width:0;max-width:100%}
   .metric{padding:12px}
   .panel{border-radius:13px}
