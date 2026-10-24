@@ -50,6 +50,13 @@ input,select,textarea,button{font:inherit}
   form{min-width:0;max-width:100%}
   input,select,textarea,button{max-width:100%}
 }
+/* Landscape phones: permit the workspace navigation to receive horizontal touch gestures even though the page itself scrolls vertically. */
+@media(max-width:800px) and (orientation:landscape) and (max-height:600px){
+  html,body{touch-action:auto!important;overflow-x:hidden!important}
+  #side{position:relative!important;top:auto!important;max-height:none!important;overflow:visible!important}
+  #nav{touch-action:pan-x!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain;scrollbar-width:thin;min-height:46px;padding-bottom:6px}
+  #nav .navbtn{flex:0 0 auto!important}
+}
 @media(max-width:480px){
   #main{padding:10px!important}
   #side{padding:8px!important}
